@@ -5,6 +5,8 @@ ini_set('display_errors', 1);
 
 // Set headers first
 header("Access-Control-Allow-Origin: http://localhost:5174");
+header("Access-Control-Allow-Origin: https://tskyapp.netlify.app");
+header("Access-Control-Allow-Origin: https://tsky.kesug.com");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 3600");

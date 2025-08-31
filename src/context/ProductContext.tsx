@@ -68,7 +68,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   });
 
   // API configuration
-  const API_BASE_URL = '/backend/api';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/backend/api';
 
   // Fetch products from API
   const fetchProducts = async () => {
