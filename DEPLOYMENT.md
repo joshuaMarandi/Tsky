@@ -8,8 +8,28 @@
 - **Credentials**: Already updated in `backend/config/database.php`
 
 ### 1. Upload Backend Files
-- Upload the entire `backend/` folder to your InfinityFree public_html
+- Upload the **contents** of the `backend/` folder to your InfinityFree **public_html** directory
+- **Important:** Do NOT upload the `backend/` folder itself - upload its contents directly to public_html
+- This means `index.php`, `api/`, `classes/`, `config/`, etc. should be in the root of public_html
 - Make sure all PHP files have proper permissions (644 for files, 755 for directories)
+
+### Directory Structure After Upload:
+```
+public_html/
+├── index.php          (main entry point)
+├── .htaccess          (Apache configuration)
+├── error.php          (error handler)
+├── api/
+│   ├── products.php
+│   ├── sales.php
+│   └── sold-out.php
+├── classes/
+│   └── Product.php
+├── config/
+│   └── database.php
+├── init_database.php
+└── ... (other files)
+```
 
 ### 2. Initialize Database
 - Run `https://tsky.kesug.com/init_database.php` in your browser to create tables and insert sample data
