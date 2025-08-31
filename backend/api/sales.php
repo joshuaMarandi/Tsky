@@ -1,8 +1,20 @@
 <?php
+$allowed_origins = [
+    'http://localhost:5174',
+    'https://tskyapp.netlify.app',
+    'https://tsky.kesug.com',
+    'http://localhost:4173'
+];
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    header("Access-Control-Allow-Origin: *");
+}
+
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost:5174');
-header('Access-Control-Allow-Origin: https://tskyapp.netlify.app');
-header('Access-Control-Allow-Origin: https://tsky.kesug.com');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
