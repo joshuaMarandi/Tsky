@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#003366;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="pattern1" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="25" cy="25" r="1" fill="rgba(255, 255, 255, 0.2)" />
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#grad1)" />
+  <rect width="1920" height="1080" fill="url(#pattern1)" />
+  
+  <!-- Abstract PC Components -->
+  <g opacity="0.15" fill="#ffffff">
+    <!-- CPU -->
+    <rect x="400" y="300" width="200" height="200" rx="10" />
+    <rect x="420" y="320" width="160" height="160" rx="5" fill="#003366" />
+    
+    <!-- GPU -->
+    <rect x="700" y="400" width="400" height="100" rx="10" />
+    <rect x="720" y="420" width="360" height="60" rx="5" fill="#003366" />
+    
+    <!-- RAM Sticks -->
+    <rect x="1200" y="300" width="50" height="200" rx="5" />
+    <rect x="1270" y="300" width="50" height="200" rx="5" />
+    <rect x="1340" y="300" width="50" height="200" rx="5" />
+    <rect x="1410" y="300" width="50" height="200" rx="5" />
+    
+    <!-- Motherboard Traces -->
+    <path d="M 400 400 L 700 450 L 1200 400 L 1200 300" stroke="#ffffff" stroke-width="2" fill="none" />
+    <path d="M 600 400 L 700 450 L 1270 400 L 1270 300" stroke="#ffffff" stroke-width="2" fill="none" />
+    <path d="M 600 500 L 900 450 L 1340 500 L 1340 300" stroke="#ffffff" stroke-width="2" fill="none" />
+    <path d="M 400 500 L 1100 450 L 1410 400 L 1410 300" stroke="#ffffff" stroke-width="2" fill="none" />
+    
+    <!-- Cooling Fan -->
+    <circle cx="500" cy="700" r="80" />
+    <circle cx="500" cy="700" r="70" fill="#003366" />
+    <circle cx="500" cy="700" r="10" />
+    <line x1="500" y1="700" x2="500" y2="640" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="560" y2="700" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="500" y2="760" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="440" y2="700" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="545" y2="745" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="545" y2="655" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="455" y2="655" stroke="#ffffff" stroke-width="3" />
+    <line x1="500" y1="700" x2="455" y2="745" stroke="#ffffff" stroke-width="3" />
+    
+    <!-- SSD -->
+    <rect x="1200" y="600" width="200" height="100" rx="10" />
+    <rect x="1220" y="620" width="160" height="60" rx="5" fill="#003366" />
+    
+    <!-- Case Outline -->
+    <rect x="300" y="200" width="1300" height="700" rx="20" stroke="#ffffff" stroke-width="4" fill="none" />
+  </g>
+</svg>

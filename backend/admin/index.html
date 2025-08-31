@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsky Technologies Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark-color);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform var(--transition-speed);
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .menu-item {
+            margin: 5px 0;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #d1d1d1;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-link:hover, .menu-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: var(--primary-color);
+        }
+        
+        .menu-icon {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .content-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: margin-left var(--transition-speed);
+        }
+        
+        /* Header */
+        .top-header {
+            background: white;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .toggle-sidebar {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-color);
+            cursor: pointer;
+        }
+        
+        .header-search {
+            flex: 1;
+            margin: 0 20px;
+            position: relative;
+            max-width: 500px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px 8px 40px;
+            border: 1px solid #e1e1e1;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            transition: all var(--transition-speed);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+        
+        .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .profile-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-footer {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.02);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 20px;
+        }
+        
+        .stat-icon.products {
+            background: rgba(0, 102, 204, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .stat-icon.users {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stat-icon.orders {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .stat-icon.revenue {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .stat-content h3 {
+            font-size: 22px;
+            margin: 0;
+        }
+        
+        .stat-content p {
+            color: var(--secondary-color);
+            margin: 5px 0 0;
+            font-size: 14px;
+        }
+        
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        
+        .data-table th {
+            background: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1 0 calc(50% - 10px);
+            min-width: 250px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: all var(--transition-speed);
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            outline: none;
+        }
+        
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            width: 100%;
+        }
+        
+        .form-text {
+            color: var(--secondary-color);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed);
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .badge-primary {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .badge-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Status Message */
+        .status-message {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .status-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: var(--secondary-color);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Debug Output */
+        #debug-output {
+            background-color: #f8f9fa;
+            border: 1px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* Image Preview */
+        .image-preview-container {
+            margin-top: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            border: 1px dashed #e1e1e1;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            height: 150px;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 130px;
+            object-fit: contain;
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 0px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+                width: 250px;
+            }
+            
+            .content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+            
+            .header-search {
+                display: none;
+            }
+            
+            .form-row .form-group {
+                flex: 1 0 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+        }
+
+        .admin-nav {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-nav button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 10px 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav button:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+        }
+
+        .admin-nav button.active {
+            background: #28a745;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .products-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .products-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--dark-color);
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-table {
+                font-size: 12px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo">Tsky Admin</a>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="showSection('dashboard'); return false;">
+                        <i class="menu-icon fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="#" class="menu-link active" onclick="showSection('products'); return false;">
+                        <i class="menu-icon fas fa-desktop"></i>
+                        Products
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="showSection('add'); return false;">
+                        <i class="menu-icon fas fa-plus-circle"></i>
+                        Add Product
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="showSection('edit'); return false;">
+                        <i class="menu-icon fas fa-edit"></i>
+                        Edit Product
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="showSection('debug'); return false;">
+                        <i class="menu-icon fas fa-bug"></i>
+                        Debug Info
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="#" class="menu-link" onclick="showSection('sales'); return false;">
+                        <i class="menu-icon fas fa-chart-line"></i>
+                        Manage Sales
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Header -->
+            <header class="top-header">
+                <button class="toggle-sidebar" id="toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="header-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search products...">
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="header-profile">
+                        <div class="profile-avatar">A</div>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content -->
+            <main class="main-content">
+                <div id="status-message" class="status-message"></div>
+                
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section">
+                    <h1 class="page-title">Dashboard</h1>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon products">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="product-count">0</h3>
+                                <p>Total Products</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon users">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <!-- <div class="stat-content">
+                                <h3>8</h3>
+                                <p>Active Users</p>
+                            </div> -->
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon orders">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>24</h3>
+                                <p>Total Orders</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Tsh 12,450,450</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Products</h2>
+                            <a href="#" class="btn btn-sm btn-primary" onclick="showSection('products'); return false;">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="recent-products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Purpose</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-products-tbody">
+                                        <!-- Recent products will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products List Section -->
+                <div id="products-section" class="section active">
+                    <h1 class="page-title">Products Catalog</h1>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">All Products</h2>
+                            <button class="btn btn-sm btn-primary" onclick="showSection('add')">Add New</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="products-loading" class="loading">
+                                <div class="spinner"></div>
+                                <span>Loading products...</span>
+                            </div>
+                            <div id="products-content" style="display: none;">
+                                <div class="table-responsive">
+                                    <table class="data-table" id="products-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Processor</th>
+                                                <th>RAM</th>
+                                                <th>Price</th>
+                                                <th>Purpose</th>
+                                                <th>Tag</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="products-tbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Product Section -->
+                <div id="add-section" class="section">
+                    <h1 class="page-title">Add New Product</h1>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Product Information</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="add-product-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="add-name">Product Name *</label>
+                    <input type="text" id="add-name" name="name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-processor">Processor *</label>
+                        <select id="add-processor" name="processor" required>
+                            <option value="">Select Processor</option>
+                            <option value="intel-i3">Intel Core i3</option>
+                            <option value="intel-i5">Intel Core i5</option>
+                            <option value="intel-i7">Intel Core i7</option>
+                            <option value="intel-i9">Intel Core i9</option>
+                            <option value="amd-ryzen3">AMD Ryzen 3</option>
+                            <option value="amd-ryzen5">AMD Ryzen 5</option>
+                            <option value="amd-ryzen7">AMD Ryzen 7</option>
+                            <option value="amd-ryzen9">AMD Ryzen 9</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-ram">RAM *</label>
+                        <select id="add-ram" name="ram" required>
+                            <option value="">Select RAM</option>
+                            <option value="4gb">4GB DDR4</option>
+                            <option value="8gb">8GB DDR4</option>
+                            <option value="16gb">16GB DDR4</option>
+                            <option value="32gb">32GB DDR4</option>
+                            <option value="64gb">64GB DDR4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-graphics">Graphics *</label>
+                        <select id="add-graphics" name="graphics" required>
+                            <option value="">Select Graphics</option>
+                            <option value="integrated">Integrated Graphics</option>
+                            <option value="nvidia-gtx1650">NVIDIA GTX 1650</option>
+                            <option value="nvidia-gtx1660">NVIDIA GTX 1660</option>
+                            <option value="nvidia-rtx3050">NVIDIA RTX 3050</option>
+                            <option value="nvidia-rtx3060">NVIDIA RTX 3060</option>
+                            <option value="nvidia-rtx3070">NVIDIA RTX 3070</option>
+                            <option value="nvidia-rtx3080">NVIDIA RTX 3080</option>
+                            <option value="amd-rx6500">AMD RX 6500</option>
+                            <option value="amd-rx6600">AMD RX 6600</option>
+                            <option value="amd-rx6700">AMD RX 6700</option>
+                            <option value="amd-rx6800">AMD RX 6800</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-storage">Storage *</label>
+                        <select id="add-storage" name="storage" required>
+                            <option value="">Select Storage</option>
+                            <option value="ssd-256">256GB SSD</option>
+                            <option value="ssd-512">512GB SSD</option>
+                            <option value="ssd-1tb">1TB SSD</option>
+                            <option value="ssd-2tb">2TB SSD</option>
+                            <option value="hdd-1tb">1TB HDD</option>
+                            <option value="hdd-2tb">2TB HDD</option>
+                            <option value="combo-ssd-hdd">512GB SSD + 2TB HDD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-purpose">Purpose *</label>
+                        <select id="add-purpose" name="purpose" required>
+                            <option value="">Select Purpose</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="office">Office/Home</option>
+                            <option value="workstation">Workstation</option>
+                            <option value="design">Design/Creative</option>
+                            <option value="streaming">Streaming</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-price">Price *</label>
+                        <input type="number" id="add-price" name="price" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-image">Product Image</label>
+                        <input type="file" id="add-image" name="product_image" accept="image/*">
+                        <small class="form-text text-muted">Upload a product image (JPG, PNG, SVG, etc.)</small>
+                        <div id="image-preview-container" style="margin-top: 10px; display: none;">
+                            <img id="image-preview" src="#" alt="Image Preview" style="max-width: 200px; max-height: 150px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-tag">Tag</label>
+                        <input type="text" id="add-tag" name="tag" placeholder="e.g., Best Seller, Budget, Premium">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="add-specs">Specifications</label>
+                    <textarea id="add-specs" name="specs" rows="3" placeholder="Brief specification summary"></textarea>
+                </div>
+
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" form="add-product-form" class="btn btn-success">Add Product</button>
+                            <button type="reset" form="add-product-form" class="btn btn-secondary">Reset Form</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Product Section -->
+                <div id="edit-section" class="section">
+                    <h1 class="page-title">Edit Product</h1>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Select Product</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="edit-product-select">Choose a product to edit</label>
+                                <select id="edit-product-select" class="form-control" onchange="loadProductForEdit()">
+                                    <option value="">Select a product...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="edit-product-card" class="card" style="display: none; margin-top: 20px;">
+                        <div class="card-header">
+                            <h2 class="card-title">Edit Product Information</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="edit-product-form" enctype="multipart/form-data">
+                <input type="hidden" id="edit-id" name="id">
+                
+                <div class="form-group">
+                    <label for="edit-name">Product Name *</label>
+                    <input type="text" id="edit-name" name="name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-processor">Processor *</label>
+                        <select id="edit-processor" name="processor" required>
+                            <option value="">Select Processor</option>
+                            <option value="intel-i3">Intel Core i3</option>
+                            <option value="intel-i5">Intel Core i5</option>
+                            <option value="intel-i7">Intel Core i7</option>
+                            <option value="intel-i9">Intel Core i9</option>
+                            <option value="amd-ryzen3">AMD Ryzen 3</option>
+                            <option value="amd-ryzen5">AMD Ryzen 5</option>
+                            <option value="amd-ryzen7">AMD Ryzen 7</option>
+                            <option value="amd-ryzen9">AMD Ryzen 9</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-ram">RAM *</label>
+                        <select id="edit-ram" name="ram" required>
+                            <option value="">Select RAM</option>
+                            <option value="4gb">4GB DDR4</option>
+                            <option value="8gb">8GB DDR4</option>
+                            <option value="16gb">16GB DDR4</option>
+                            <option value="32gb">32GB DDR4</option>
+                            <option value="64gb">64GB DDR4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-graphics">Graphics *</label>
+                        <select id="edit-graphics" name="graphics" required>
+                            <option value="">Select Graphics</option>
+                            <option value="integrated">Integrated Graphics</option>
+                            <option value="nvidia-gtx1650">NVIDIA GTX 1650</option>
+                            <option value="nvidia-gtx1660">NVIDIA GTX 1660</option>
+                            <option value="nvidia-rtx3050">NVIDIA RTX 3050</option>
+                            <option value="nvidia-rtx3060">NVIDIA RTX 3060</option>
+                            <option value="nvidia-rtx3070">NVIDIA RTX 3070</option>
+                            <option value="nvidia-rtx3080">NVIDIA RTX 3080</option>
+                            <option value="amd-rx6500">AMD RX 6500</option>
+                            <option value="amd-rx6600">AMD RX 6600</option>
+                            <option value="amd-rx6700">AMD RX 6700</option>
+                            <option value="amd-rx6800">AMD RX 6800</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-storage">Storage *</label>
+                        <select id="edit-storage" name="storage" required>
+                            <option value="">Select Storage</option>
+                            <option value="ssd-256">256GB SSD</option>
+                            <option value="ssd-512">512GB SSD</option>
+                            <option value="ssd-1tb">1TB SSD</option>
+                            <option value="ssd-2tb">2TB SSD</option>
+                            <option value="hdd-1tb">1TB HDD</option>
+                            <option value="hdd-2tb">2TB HDD</option>
+                            <option value="combo-ssd-hdd">512GB SSD + 2TB HDD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-purpose">Purpose *</label>
+                        <select id="edit-purpose" name="purpose" required>
+                            <option value="">Select Purpose</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="office">Office/Home</option>
+                            <option value="workstation">Workstation</option>
+                            <option value="design">Design/Creative</option>
+                            <option value="streaming">Streaming</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-price">Price *</label>
+                        <input type="number" id="edit-price" name="price" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-image">Product Image</label>
+                        <input type="file" id="edit-image" name="product_image" accept="image/*">
+                        <small class="form-text text-muted">Upload a new product image (JPG, PNG, SVG, etc.)</small>
+                        <div id="edit-image-preview-container" style="margin-top: 10px;">
+                            <img id="edit-image-preview" src="#" alt="Current Image" style="max-width: 200px; max-height: 150px;">
+                        </div>
+                        <input type="hidden" id="edit-current-image" name="current_image">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tag">Tag</label>
+                        <input type="text" id="edit-tag" name="tag">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-specs">Specifications</label>
+                    <textarea id="edit-specs" name="specs" rows="3"></textarea>
+                </div>
+
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" form="edit-product-form" class="btn btn-success">Update Product</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete Product</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Debug Section -->
+                <div id="debug-section" class="section">
+                    <h1 class="page-title">Debug Information</h1>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">System Tests</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <button onclick="testAPI()" class="btn btn-primary">Test API Connection</button>
+                                <button onclick="testDatabase()" class="btn btn-primary">Test Database</button>
+                            </div>
+                            <div id="debug-output" class="mt-4">
+                                <p>Click the buttons above to test your setup...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Sales Section -->
+                <div id="sales-section" class="section">
+                    <h1 class="page-title">Manage Sales</h1>
+
+                    <!-- Sales History -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Sales History</h2>
+                            <button class="btn btn-primary" onclick="openAddSaleModal()">Add Sale</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="sales-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-tbody">
+                                        <!-- Sales will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Sale Modal -->
+                <div id="add-sale-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Add New Sale</h2>
+                            <span class="close" onclick="closeAddSaleModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="add-sale-form">
+                                <div class="form-group">
+                                    <label for="sale-product-select">Product *</label>
+                                    <select id="sale-product-select" name="product" class="form-control" required>
+                                        <option value="">Select a product...</option>
+                                        <!-- Products will be dynamically loaded here -->
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sale-price">Price *</label>
+                                    <input type="number" id="sale-price" name="price" class="form-control" step="0.01" min="0" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sale-date">Date *</label>
+                                    <input type="date" id="sale-date" name="date" class="form-control" required>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="closeAddSaleModal()">Cancel</button>
+                                    <button type="submit" class="btn btn-success">Add Sale</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    </div>
+    <script>
+        const API_BASE = '../api/products.php';
+        const SALES_API = '../api/sales.php';
+        let products = [];
+
+        // Navigation
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Update sidebar menu active state
+            document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
+            const menuLink = document.querySelector(`.menu-link[onclick*="showSection('${section}')"]`);
+            if (menuLink) menuLink.classList.add('active');
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.add('active');
+            
+            // Load section specific data
+            if (section === 'dashboard') {
+                loadDashboardData();
+            } else if (section === 'products') {
+                loadProducts();
+            } else if (section === 'edit') {
+                loadProductsForEdit();
+            } else if (section === 'sales') {
+                loadProductsForSales();
+            }
+        }
+        
+        // Toggle sidebar in mobile view
+        document.getElementById('toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load products data
+                const productsResponse = await fetch(API_BASE);
+                const productsData = await productsResponse.json();
+                
+                // Load sales data
+                const salesResponse = await fetch(SALES_API);
+                const salesData = await salesResponse.json();
+
+                if (productsResponse.ok && productsData.products) {
+                    // Update product count
+                    document.getElementById('product-count').textContent = productsData.products.length;
+                    
+                    // Load recent products (up to 5)
+                    const recentProducts = productsData.products.slice(0, 5);
+                    const tbody = document.getElementById('recent-products-tbody');
+                    tbody.innerHTML = '';
+                    
+                    recentProducts.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>Tsh ${parseFloat(product.price).toLocaleString()}</td>
+                            <td>${product.purpose}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editProduct(${product.id})">Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="confirmDelete(${product.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+                
+                // Update sales statistics
+                if (salesResponse.ok && salesData.sales) {
+                    const sales = salesData.sales;
+                    const totalSales = sales.length;
+                    const totalRevenue = sales.reduce((sum, sale) => sum + parseFloat(sale.price), 0);
+                    
+                    // Update dashboard cards with sales data
+                    const usersStat = document.querySelector('.stat-card .stat-content h3');
+                    if (usersStat) {
+                        usersStat.textContent = totalSales;
+                        usersStat.nextElementSibling.textContent = 'Total Sales';
+                    }
+                    
+                    const ordersStat = document.querySelectorAll('.stat-card .stat-content h3')[2];
+                    if (ordersStat) {
+                        ordersStat.textContent = totalSales;
+                        ordersStat.nextElementSibling.textContent = 'Total Orders';
+                    }
+                    
+                    const revenueStat = document.querySelectorAll('.stat-card .stat-content h3')[3];
+                    if (revenueStat) {
+                        revenueStat.textContent = `Tsh ${totalRevenue.toLocaleString()}`;
+                    }
+                }
+            } catch (error) {
+                showMessage('Error loading dashboard data: ' + error.message, 'error');
+            }
+        }
+
+        // Load products
+        async function loadProducts() {
+            document.getElementById('products-loading').style.display = 'block';
+            document.getElementById('products-content').style.display = 'none';
+            
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (response.ok && data.products) {
+                    products = data.products;
+                    displayProducts(products);
+                } else {
+                    showMessage('No products found.', 'error');
+                }
+            } catch (error) {
+                showMessage('Error loading products: ' + error.message, 'error');
+            }
+            
+            document.getElementById('products-loading').style.display = 'none';
+            document.getElementById('products-content').style.display = 'block';
+        }
+
+        // Display products in table
+        function displayProducts(products) {
+            const tbody = document.getElementById('products-tbody');
+            tbody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                const isSoldOut = product.sold_out == 1 || product.sold_out === true;
+                const statusText = isSoldOut ? '<span style="color: #dc3545; font-weight: bold;">SOLD OUT</span>' : '<span style="color: #28a745; font-weight: bold;">AVAILABLE</span>';
+                const toggleButtonText = isSoldOut ? 'Mark Available' : 'Mark Sold Out';
+                const toggleButtonClass = isSoldOut ? 'btn-success' : 'btn-warning';
+                
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.processor}</td>
+                    <td>${product.ram}</td>
+                    <td>$${parseFloat(product.price).toFixed(2)}</td>
+                    <td>${product.purpose}</td>
+                    <td>${product.tag || '-'}</td>
+                    <td>${statusText}</td>
+                    <td>
+                        <button class="btn ${toggleButtonClass}" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" onclick="toggleSoldOutStatus(${product.id}, ${!isSoldOut})">${toggleButtonText}</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" onclick="editProduct(${product.id})">Edit</button>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="confirmDelete(${product.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load products for edit dropdown
+        async function loadProductsForEdit() {
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (response.ok && data.products) {
+                    const select = document.getElementById('edit-product-select');
+                    select.innerHTML = '<option value="">Choose a product...</option>';
+                    
+                    data.products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = `${product.name} (ID: ${product.id})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                showMessage('Error loading products for edit: ' + error.message, 'error');
+            }
+        }
+
+        // Modal functions for Add Sale
+        function openAddSaleModal() {
+            document.getElementById('add-sale-modal').style.display = 'flex';
+            // Load products when modal opens
+            loadProductsForSales();
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('sale-date').value = today;
+        }
+
+        function closeAddSaleModal() {
+            document.getElementById('add-sale-modal').style.display = 'none';
+            // Reset form
+            document.getElementById('add-sale-form').reset();
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('add-sale-modal');
+            if (event.target == modal) {
+                closeAddSaleModal();
+            }
+        }
+
+        // Load products for sales dropdown
+        async function loadProductsForSales() {
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+
+                if (response.ok && data.products) {
+                    const productSelect = document.getElementById('sale-product-select');
+                    productSelect.innerHTML = '<option value="">Select a product...</option>';
+
+                    data.products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = product.name;
+                        productSelect.appendChild(option);
+                    });
+
+                    // Also load existing sales
+                    loadSales();
+                } else {
+                    showMessage('Error loading products for sales: ' + data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error loading products for sales: ' + error.message, 'error');
+            }
+        }
+
+        // Load and display sales
+        async function loadSales() {
+            try {
+                const response = await fetch(SALES_API);
+                const data = await response.json();
+
+                if (response.ok && data.sales) {
+                    const tbody = document.getElementById('sales-tbody');
+                    tbody.innerHTML = '';
+
+                    data.sales.forEach(sale => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${sale.id}</td>
+                            <td>${sale.product_name}</td>
+                            <td>Tsh ${parseFloat(sale.price).toLocaleString()}</td>
+                            <td>${sale.sale_date}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="deleteSale(${sale.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    const tbody = document.getElementById('sales-tbody');
+                    tbody.innerHTML = '<tr><td colspan="5">No sales found</td></tr>';
+                }
+            } catch (error) {
+                showMessage('Error loading sales: ' + error.message, 'error');
+            }
+        }
+
+        // Delete sale
+        async function deleteSale(saleId) {
+            if (!confirm('Are you sure you want to delete this sale?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(SALES_API + '?id=' + saleId, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Sale deleted successfully!', 'success');
+                    loadSales();
+                    loadDashboardData(); // Update dashboard
+                } else {
+                    showMessage('Error deleting sale: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting sale: ' + error.message, 'error');
+            }
+        }
+
+        // Toggle sales section
+        function toggleSalesSection() {
+            const salesSection = document.getElementById('sales-section');
+            const isActive = salesSection.classList.contains('active');
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            if (!isActive) {
+                // Show sales section
+                salesSection.classList.add('active');
+                loadProductsForSales();
+            }
+        }
+        
+        // Handle add sale form submission
+        document.getElementById('add-sale-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const productId = formData.get('product');
+            const price = parseFloat(formData.get('price'));
+            const date = formData.get('date');
+
+            // Get product name from the selected option
+            const productSelect = document.getElementById('sale-product-select');
+            const productName = productSelect.options[productSelect.selectedIndex].text;
+
+            const saleData = {
+                product_id: productId,
+                product_name: productName,
+                price: price,
+                sale_date: date
+            };
+
+            try {
+                const response = await fetch(SALES_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(saleData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Sale added successfully!', 'success');
+                    closeAddSaleModal(); // Close the modal
+                    loadSales(); // Reload sales list
+                    loadDashboardData(); // Update dashboard
+                } else {
+                    showMessage('Error adding sale: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error adding sale: ' + error.message, 'error');
+            }
+        });
+
+        // Image preview for add form
+        document.getElementById('add-image').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('image-preview').src = e.target.result;
+                    document.getElementById('image-preview-container').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('image-preview-container').style.display = 'none';
+            }
+        });
+        
+        // Image preview for edit form
+        document.getElementById('edit-image').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('edit-image-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add product form submission
+        document.getElementById('add-product-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Don't convert FormData to JSON since we need to upload files
+            console.log('Sending product data with image...');
+            
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    body: formData // Send FormData directly for file upload
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    throw new Error('Server returned invalid JSON. Response: ' + responseText.substring(0, 200));
+                }
+                
+                if (response.ok) {
+                    showMessage('Product added successfully!', 'success');
+                    this.reset();
+                } else {
+                    showMessage('Error adding product: ' + (result.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Full error:', error);
+                showMessage('Error adding product: ' + error.message, 'error');
+            }
+        });
+
+        // Load product for editing
+        async function loadProductForEdit() {
+            const productId = document.getElementById('edit-product-select').value;
+            const editCard = document.getElementById('edit-product-card');
+            
+            if (!productId) {
+                editCard.style.display = 'none';
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_BASE + '?id=' + productId);
+                const product = await response.json();
+                
+                if (response.ok) {
+                    // Populate form
+                    document.getElementById('edit-id').value = product.id;
+                    document.getElementById('edit-name').value = product.name;
+                    document.getElementById('edit-processor').value = product.processor;
+                    document.getElementById('edit-ram').value = product.ram;
+                    document.getElementById('edit-graphics').value = product.graphics;
+                    document.getElementById('edit-storage').value = product.storage;
+                    document.getElementById('edit-purpose').value = product.purpose;
+                    document.getElementById('edit-price').value = product.price;
+                    document.getElementById('edit-current-image').value = product.image || '';
+                    document.getElementById('edit-tag').value = product.tag || '';
+                    document.getElementById('edit-specs').value = product.specs || '';
+                    
+                    // Show current image if available
+                    const imagePreview = document.getElementById('edit-image-preview');
+                    if (product.image) {
+                        imagePreview.src = 'http://localhost' + product.image;
+                        document.getElementById('edit-image-preview-container').style.display = 'block';
+                    } else {
+                        document.getElementById('edit-image-preview-container').style.display = 'none';
+                    }
+                    
+                    // Show the edit card
+                    editCard.style.display = 'block';
+                } else {
+                    showMessage('Error loading product: ' + product.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error loading product: ' + error.message, 'error');
+            }
+        }
+
+        // Edit product form submission
+        document.getElementById('edit-product-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const productId = formData.get('id');
+            
+            // Add PUT method indicator since FormData can't use PUT directly
+            formData.append('_method', 'PUT');
+            
+            try {
+                const response = await fetch(API_BASE + '?id=' + productId, {
+                    method: 'POST', // We'll use POST but handle as PUT on server side
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Product updated successfully!', 'success');
+                    loadProductsForEdit();
+                } else {
+                    showMessage('Error updating product: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error updating product: ' + error.message, 'error');
+            }
+        });
+
+        // Delete product
+        async function deleteProduct() {
+            const productId = document.getElementById('edit-id').value;
+            
+            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_BASE + '?id=' + productId, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Product deleted successfully!', 'success');
+                    document.getElementById('edit-product-card').style.display = 'none';
+                    document.getElementById('edit-product-select').value = '';
+                    loadProductsForEdit();
+                    updateDashboard(); // Update dashboard counters
+                } else {
+                    showMessage('Error deleting product: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting product: ' + error.message, 'error');
+            }
+        }
+
+        // Quick edit from products table
+        function editProduct(id) {
+            showSection('edit');
+            document.getElementById('edit-product-select').value = id;
+            loadProductForEdit();
+        }
+
+        // Confirm delete from products table
+        function confirmDelete(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                deleteProductById(id);
+            }
+        }
+
+        // Toggle sold out status
+        async function toggleSoldOutStatus(productId, soldOut) {
+            try {
+                console.log('Sending request:', { id: productId, sold_out: soldOut });
+                
+                const response = await fetch('../api/sold-out.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: productId,
+                        sold_out: soldOut
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                
+                // Get the raw response text first
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                console.log('Response length:', responseText.length);
+                
+                // Try to parse as JSON
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    console.error('Response text was:', JSON.stringify(responseText));
+                    throw new Error('Invalid JSON response: ' + responseText.substring(0, 100));
+                }
+
+                console.log('Parsed result:', result);
+
+                if (result.success) {
+                    const statusText = soldOut ? 'marked as sold out' : 'marked as available';
+                    showMessage(`Product ${statusText} successfully!`, 'success');
+                    loadProducts(); // Reload products list
+                    loadDashboardData(); // Update dashboard
+                } else {
+                    showMessage('Error updating product status: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Toggle sold out error:', error);
+                showMessage('Error updating product status: ' + error.message, 'error');
+            }
+        }
+
+        // Delete product by ID
+        async function deleteProductById(id) {
+            try {
+                const response = await fetch(API_BASE + '?id=' + id, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Product deleted successfully!', 'success');
+                    loadProducts();
+                } else {
+                    showMessage('Error deleting product: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error deleting product: ' + error.message, 'error');
+            }
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            document.getElementById('edit-product-card').style.display = 'none';
+            document.getElementById('edit-product-select').value = '';
+            document.getElementById('edit-product-form').reset();
+        }
+
+        // Show status message
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('status-message');
+            messageDiv.textContent = message;
+            messageDiv.className = 'status-message status-' + type;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Debug functions
+        async function testAPI() {
+            const output = document.getElementById('debug-output');
+            output.innerHTML = '<p>Testing API connection...</p>';
+            
+            try {
+                const response = await fetch('../api/debug.php');
+                const data = await response.json();
+                
+                output.innerHTML = '<h3>API Test Results:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                output.innerHTML = '<h3>API Test Failed:</h3><p style="color: red;">' + error.message + '</p>';
+            }
+        }
+
+        async function testDatabase() {
+            const output = document.getElementById('debug-output');
+            output.innerHTML = '<p>Testing database connection...</p>';
+            
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    output.innerHTML = '<h3>Database Test Results:</h3><p style="color: green;">✅ Database connection successful!</p><p>Found ' + (data.products ? data.products.length : 0) + ' products</p>';
+                } else {
+                    output.innerHTML = '<h3>Database Test Failed:</h3><p style="color: red;">❌ ' + (data.message || 'Unknown error') + '</p>';
+                }
+            } catch (error) {
+                output.innerHTML = '<h3>Database Test Failed:</h3><p style="color: red;">❌ ' + error.message + '</p>';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+        });
+    </script>
+</body>
+</html>
