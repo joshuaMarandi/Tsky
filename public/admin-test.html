@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Admin Login Test</h1>
+
+    <div class="test-section">
+        <h3>Test Admin Login</h3>
+        <button onclick="testLogin('admin', 'admin123')">Login as admin/admin123</button>
+        <button onclick="testLogin('admin2', 'admin2')">Login as admin2/admin2</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Sold-Out API</h3>
+        <button onclick="testSoldOut(1, false)">Mark Product 1 as Available</button>
+        <button onclick="testSoldOut(1, true)">Mark Product 1 as Sold Out</button>
+        <div id="soldOutResult"></div>
+    </div>
+
+    <script>
+        async function testLogin(username, password) {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.innerHTML = '<p>Testing login...</p>';
+
+            try {
+                const response = await fetch('/backend/auth.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'login',
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p>✅ Login successful!</p>
+                            <p>Token: ${data.token.substring(0, 50)}...</p>
+                            <p>User: ${data.user.username} (${data.user.email})</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p>❌ Login failed: ${data.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p>❌ Network error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testSoldOut(productId, soldOut) {
+            const resultDiv = document.getElementById('soldOutResult');
+            resultDiv.innerHTML = '<p>Testing sold-out API...</p>';
+
+            try {
+                const response = await fetch('/backend/api/sold-out.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        sold_out: soldOut
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p>✅ Sold-out API successful!</p>
+                            <p>Product ${productId} marked as ${soldOut ? 'sold out' : 'available'}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p>❌ Sold-out API failed: ${data.error || 'Unknown error'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p>❌ Network error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

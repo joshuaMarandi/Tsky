@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     server: {
       proxy: {
         '/backend': {
-          target: 'http://localhost/Tsky/Tsky-react/backend',
+          target: 'http://localhost/Tsky/backend',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/backend/, '')
         }

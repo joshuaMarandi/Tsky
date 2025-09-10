@@ -52,7 +52,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           token: token
         })
       });
-
       const data = await response.json();
       
       if (data.success) {
@@ -72,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth_debug.php`, {
+      const response = await fetch(`${API_BASE_URL}/auth.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

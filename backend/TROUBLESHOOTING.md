@@ -18,13 +18,13 @@ Open XAMPP Control Panel
 ```
 
 ### 2. Test API Directly
-Open your browser and visit: `http://localhost/BIGMAN/bigman-react/backend/api/debug.php`
+Open your browser and visit: `http://localhost/Tsky/Tsky-react/backend/api/debug.php`
 
 **Expected Result**: JSON data showing API info
 **If you see HTML error**: There's a PHP error - check step 3
 
 ### 3. Check for PHP Errors
-Visit: `http://localhost/BIGMAN/bigman-react/backend/api/products.php`
+Visit: `http://localhost/Tsky/Tsky-react/backend/api/products.php`
 
 **Common PHP Errors:**
 - `Fatal error: Class 'Database' not found` → Check file paths
@@ -33,14 +33,14 @@ Visit: `http://localhost/BIGMAN/bigman-react/backend/api/products.php`
 
 ### 4. Verify Database Setup
 1. Visit: `http://localhost/phpmyadmin/`
-2. Check if `bigman_pc` database exists
+2. Check if `tsky` database exists
 3. Check if `products` table has data
-4. If not, run: `http://localhost/BIGMAN/bigman-react/backend/init_database.php`
+4. If not, run: `http://localhost/Tsky/Tsky-react/backend/init_database.php`
 
 ### 5. Fix File Paths
 Ensure your files are located at:
 ```
-C:\xampp\htdocs\BIGMAN\bigman-react\backend\
+C:\xampp\htdocs\Tsky\Tsky-react\backend\
 ├── api\
 │   ├── products.php
 │   └── debug.php
@@ -56,7 +56,7 @@ C:\xampp\htdocs\BIGMAN\bigman-react\backend\
 Open `backend/config/database.php` and verify:
 ```php
 private $host = "localhost";
-private $db_name = "bigman_pc";
+private $db_name = "tsky";
 private $username = "root";
 private $password = "";  // Usually empty for XAMPP
 ```
@@ -65,17 +65,17 @@ private $password = "";  // Usually empty for XAMPP
 
 1. **Test Debug Endpoint**:
    ```
-   http://localhost/BIGMAN/bigman-react/backend/api/debug.php
+   http://localhost/Tsky/Tsky-react/backend/api/debug.php
    ```
 
 2. **Test Products Endpoint**:
    ```
-   http://localhost/BIGMAN/bigman-react/backend/api/products.php
+   http://localhost/Tsky/Tsky-react/backend/api/products.php
    ```
 
 3. **Test Admin Panel**:
    ```
-   http://localhost/BIGMAN/bigman-react/backend/admin/
+   http://localhost/Tsky/Tsky-react/backend/admin/
    ```
 
 ### 8. Common Solutions
@@ -100,7 +100,7 @@ private $password = "";  // Usually empty for XAMPP
 
 ### 9. Using the Debug Panel
 
-1. Open Admin Panel: `http://localhost/BIGMAN/bigman-react/backend/admin/`
+1. Open Admin Panel: `http://localhost/Tsky/Tsky-react/backend/admin/`
 2. Click "Debug Info" tab
 3. Click "Test API Connection"
 4. Click "Test Database"
@@ -121,7 +121,7 @@ This will show PHP errors directly in the browser.
 
 □ XAMPP Apache is running
 □ XAMPP MySQL is running  
-□ Database `bigman_pc` exists
+□ Database `Tsky` exists
 □ Table `products` has data
 □ API returns JSON when tested directly
 □ File paths are correct

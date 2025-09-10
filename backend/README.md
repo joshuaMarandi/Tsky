@@ -1,4 +1,4 @@
-# BIGMAN PC - Full Stack Application
+# Tsky - Full Stack Application
 
 A modern e-commerce website for PC sales built with React (frontend) and PHP with MySQL (backend).
 
@@ -50,18 +50,18 @@ Before you begin, ensure you have the following installed:
 git clone <repository-url>
 
 # Or extract the downloaded ZIP file to:
-C:\xampp\htdocs\BIGMAN\bigman-react
+C:\xampp\htdocs\Tsky\Tsky-react
 ```
 
 ### 3. Setup the Database
 
 1. Navigate to the backend directory in your browser:
    ```
-   http://localhost/BIGMAN/bigman-react/backend/init_database.php
+   http://localhost/Tsky/Tsky-react/backend/init_database.php
    ```
 
 2. This will:
-   - Create the `bigman_pc` database
+   - Create the `tsky` database
    - Create the `products` table
    - Insert sample product data
 
@@ -72,7 +72,7 @@ C:\xampp\htdocs\BIGMAN\bigman-react
 1. Open Command Prompt/Terminal
 2. Navigate to the project directory:
    ```bash
-   cd C:\xampp\htdocs\BIGMAN\bigman-react
+   cd C:\xampp\htdocs\Tsky\Tsky-react
    ```
 
 3. Install dependencies:
@@ -91,7 +91,7 @@ C:\xampp\htdocs\BIGMAN\bigman-react
 
 1. Open your browser and visit:
    ```
-   http://localhost/BIGMAN/bigman-react/backend/admin/
+   http://localhost/Tsky/Tsky-react/backend/admin/
    ```
 
 2. Use the admin panel to:
@@ -103,7 +103,7 @@ C:\xampp\htdocs\BIGMAN\bigman-react
 ## Project Structure
 
 ```
-bigman-react/
+Tsky-react/
 ├── backend/                    # PHP Backend
 │   ├── api/
 │   │   └── products.php       # API endpoints
@@ -129,7 +129,7 @@ bigman-react/
 
 ## API Endpoints
 
-### Base URL: `http://localhost/BIGMAN/bigman-react/backend/api/products.php`
+### Base URL: `http://localhost/Tsky/Tsky-react/backend/api/products.php`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -170,7 +170,7 @@ Edit `backend/config/database.php` if needed:
 
 ```php
 private $host = "localhost";
-private $db_name = "bigman_pc";
+private $db_name = "tsky";
 private $username = "root";
 private $password = "";
 ```
@@ -179,7 +179,7 @@ private $password = "";
 Edit `src/context/ProductContext.tsx` if needed:
 
 ```typescript
-const API_BASE_URL = 'http://localhost/BIGMAN/bigman-react/backend/api';
+const API_BASE_URL = 'http://localhost/Tsky/Tsky-react/backend/api';
 ```
 
 ## Troubleshooting
@@ -209,7 +209,7 @@ const API_BASE_URL = 'http://localhost/BIGMAN/bigman-react/backend/api';
 - **Frontend Development**: http://localhost:5173
 - **API Testing**: Use Postman or browser to test endpoints
 - **Database Management**: http://localhost/phpmyadmin/
-- **Admin Panel**: http://localhost/BIGMAN/bigman-react/backend/admin/
+- **Admin Panel**: http://localhost/Tsky/Tsky-react/backend/admin/
 
 ## Features in Detail
 

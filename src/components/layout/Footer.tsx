@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container">
         <div className="footer-container">
           <div className="footer-section">
-            <h3>BIGMAN PC</h3>
+            <h3>TSKY</h3>
             <p>Your trusted source for high-quality custom PCs and components.</p>
             <div className="social-icons">
               <a href="#"><FontAwesomeIcon icon={faFacebook} /></a>
@@ -30,7 +30,7 @@ const Footer = () => {
             <h3>Contact Us</h3>
             <p>123 PC Street, Tech City</p>
             <p>Phone: (123) 456-7890</p>
-            <p>Email: info@bigmanpc.com</p>
+            <p>Email: info@Tskypc.com</p>
           </div>
           <div className="footer-section">
             <h3>Newsletter</h3>
@@ -42,7 +42,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} BIGMAN PC. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Tsky. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

@@ -1,5 +1,18 @@
 # Deployment Guide: Frontend (Netlify) + Backend (InfinityFree)
 
+## 🔄 **Auto-Database Detection**
+
+The backend **automatically detects** the environment and uses the appropriate database:
+
+- **🏠 Localhost/Local Development**: Uses local MySQL (`localhost/Tsky`)
+- **🌐 Hosted/Production**: Uses InfinityFree database (`sql313.infinityfree.com/if0_39779787_tsky`)
+
+**No manual database configuration needed!** The system automatically switches between databases based on the server environment.
+
+### Testing Environment Detection
+
+Visit `https://tsky.kesug.com/test_environment.php` (after deployment) or `http://localhost/Tsky/backend/test_environment.php` (local) to verify the auto-detection is working.
+
 ## Backend Deployment (InfinityFree)
 
 ### ✅ Already Configured:

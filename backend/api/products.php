@@ -3,12 +3,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Set headers first
+// Set headers first - ensure no output before headers
 $allowed_origins = [
+    'http://localhost:5173',
     'http://localhost:5174',
+    'http://localhost:5175',
     'https://tskyapp.netlify.app',
     'https://tsky.kesug.com',
-    'http://localhost:4173'  // For production preview
+    'http://localhost:4173'
 ];
 
 $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
@@ -23,9 +25,10 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-// Include file upload handler
-include_once '../includes/file_upload.php';
+header("Access-Control-Allow-Credentials: true");
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

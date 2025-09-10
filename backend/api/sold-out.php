@@ -1,7 +1,9 @@
 <?php
 // Set headers first
 $allowed_origins = [
+    'http://localhost:5173',
     'http://localhost:5174',
+    'http://localhost:5175',
     'https://tskyapp.netlify.app',
     'https://tsky.kesug.com',
     'http://localhost:4173'
@@ -17,7 +19,11 @@ if (in_array($origin, $allowed_origins)) {
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -31,9 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Database connection
-    $pdo = new PDO("mysql:host=localhost;dbname=bigman_pc", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Database connection using the proper config
+    include_once '../config/database.php';
+    $database = new Database();
+    $pdo = $database->getConnection();
+    
+    if (!$pdo) {
+        http_response_code(500);
+        die('{"error":"Database connection failed"}');
+    }
     
     // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);

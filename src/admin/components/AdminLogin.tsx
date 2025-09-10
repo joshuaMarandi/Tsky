@@ -90,7 +90,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, error }) => {
         </form>
         
         <div className="login-footer">
-          <p>BIGMAN Admin Panel</p>
+          <p>Tsky Admin Panel</p>
         </div>
       </div>
     </div>

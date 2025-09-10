@@ -24,12 +24,12 @@ This error occurs when the frontend expects JSON but receives HTML instead. Here
 ### 4. Test API Endpoints Directly
 Open these URLs in your browser to verify they return JSON:
 
-- **Debug Endpoint**: http://localhost/BIGMAN/bigman-react/backend/api/debug.php
-- **Products Endpoint**: http://localhost/BIGMAN/bigman-react/backend/api/products.php
-- **Database Init**: http://localhost/BIGMAN/bigman-react/backend/init_database.php
+- **Debug Endpoint**: http://localhost/Tsky/Tsky-react/backend/api/debug.php
+- **Products Endpoint**: http://localhost/Tsky/Tsky-react/backend/api/products.php
+- **Database Init**: http://localhost/Tsky/Tsky-react/backend/init_database.php
 
 ### 5. Check PHP Error Logs
-1. Go to: `c:\xampp\htdocs\BIGMAN\bigman-react\backend\`
+1. Go to: `c:\xampp\htdocs\Tsky\Tsky-react\backend\`
 2. Look for `error.log` file
 3. Open it to see any PHP errors
 
@@ -42,7 +42,7 @@ Open these URLs in your browser to verify they return JSON:
 4. Check Network tab for failed requests
 
 ### Step 2: Test Admin Panel
-1. Open: http://localhost/BIGMAN/bigman-react/backend/admin/
+1. Open: http://localhost/Tsky/Tsky-react/backend/admin/
 2. Try adding a product
 3. Check browser console for errors
 4. Look at Network tab to see the actual response
@@ -52,7 +52,7 @@ Run these PowerShell commands to test the API:
 
 ```powershell
 # Test GET products
-Invoke-WebRequest -Uri "http://localhost/BIGMAN/bigman-react/backend/api/products.php" -Method GET
+Invoke-WebRequest -Uri "http://localhost/Tsky/Tsky-react/backend/api/products.php" -Method GET
 
 # Test POST new product
 $body = @{
@@ -66,7 +66,7 @@ $body = @{
     image = "/src/assets/images/pc1.svg"
 } | ConvertTo-Json
 
-Invoke-WebRequest -Uri "http://localhost/BIGMAN/bigman-react/backend/api/products.php" -Method POST -Body $body -ContentType "application/json"
+Invoke-WebRequest -Uri "http://localhost/Tsky/Tsky-react/backend/api/products.php" -Method POST -Body $body -ContentType "application/json"
 ```
 
 ## COMMON CAUSES & FIXES:
@@ -77,7 +77,7 @@ Invoke-WebRequest -Uri "http://localhost/BIGMAN/bigman-react/backend/api/product
 
 ### 2. **Database Connection Issue**
 - **Symptom**: Database connection errors in console
-- **Fix**: Run database initialization: http://localhost/BIGMAN/bigman-react/backend/init_database.php
+- **Fix**: Run database initialization: http://localhost/Tsky/Tsky-react/backend/init_database.php
 
 ### 3. **CORS Issues**
 - **Symptom**: Network errors in browser console

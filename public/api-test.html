@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function testAPI() {
+            output.innerHTML = '<p>Testing API connections...</p>';
+
+            try {
+                // Test products endpoint
+                output.innerHTML += '<h3>Testing Products API:</h3>';
+                const productsResponse = await fetch('/backend/api/products.php');
+                output.innerHTML += `<p>Status: ${productsResponse.status}</p>`;
+                output.innerHTML += `<p>CORS Origin: ${productsResponse.headers.get('Access-Control-Allow-Origin')}</p>`;
+                output.innerHTML += `<p>Content-Type: ${productsResponse.headers.get('Content-Type')}</p>`;
+
+                if (productsResponse.ok) {
+                    const data = await productsResponse.json();
+                    output.innerHTML += `<p>✅ Products API working! Found ${data.products ? data.products.length : 0} products</p>`;
+                } else {
+                    const errorText = await productsResponse.text();
+                    output.innerHTML += `<p>❌ Products API failed: ${errorText}</p>`;
+                }
+
+                // Test sold-out endpoint
+                output.innerHTML += '<h3>Testing Sold-Out API:</h3>';
+                const soldOutResponse = await fetch('/backend/api/sold-out.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: 1,
+                        sold_out: false
+                    })
+                });
+
+                output.innerHTML += `<p>Status: ${soldOutResponse.status}</p>`;
+                output.innerHTML += `<p>CORS Origin: ${soldOutResponse.headers.get('Access-Control-Allow-Origin')}</p>`;
+
+                if (soldOutResponse.ok) {
+                    const data = await soldOutResponse.json();
+                    output.innerHTML += `<p>✅ Sold-Out API working! Response: ${JSON.stringify(data)}</p>`;
+                } else {
+                    const errorText = await soldOutResponse.text();
+                    output.innerHTML += `<p>❌ Sold-Out API failed: ${errorText}</p>`;
+                }
+
+            } catch (error) {
+                output.innerHTML += `<p>❌ Network Error: ${error.message}</p>`;
+            }
+        }
+
+        // Run test when page loads
+        testAPI();
+    </script>
+</body>
+</html>
